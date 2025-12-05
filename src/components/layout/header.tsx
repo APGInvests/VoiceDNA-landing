@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/ui/logo";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -46,21 +47,8 @@ export function Header() {
       <Container size="xl">
         <nav className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <a href="#" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-coral to-peach flex items-center justify-center">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                className="w-5 h-5 text-charcoal"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M12 2v20M12 2c-2 4-2 8 0 10s2 6 0 10M12 2c2 4 2 8 0 10s-2 6 0 10" />
-              </svg>
-            </div>
-            <span className="font-headline font-bold text-cream text-lg">
-              VoiceDNA
-            </span>
+          <a href="#">
+            <Logo size="md" />
           </a>
 
           {/* Desktop Nav */}

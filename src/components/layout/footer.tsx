@@ -1,6 +1,7 @@
 "use client";
 
 import { Container } from "@/components/ui/container";
+import { Logo } from "@/components/ui/logo";
 
 const navLinks = [
   { label: "Process", href: "#process" },
@@ -41,21 +42,8 @@ export function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           {/* Logo and tagline */}
           <div className="text-center md:text-left">
-            <div className="flex items-center justify-center md:justify-start gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-coral to-peach flex items-center justify-center">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  className="w-5 h-5 text-charcoal"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M12 2v20M12 2c-2 4-2 8 0 10s2 6 0 10M12 2c2 4 2 8 0 10s-2 6 0 10" />
-                </svg>
-              </div>
-              <span className="font-headline font-bold text-cream text-lg">
-                MyVoiceDNA.ai
-              </span>
+            <div className="flex justify-center md:justify-start">
+              <Logo size="md" />
             </div>
             <p className="text-stone-text mt-2">Your voice. Quantified.</p>
             <p className="text-stone-text text-sm mt-1">
