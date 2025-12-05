@@ -11,29 +11,45 @@ const deliverables = [
   {
     number: 1,
     title: "Master Voice Persona Document",
-    description:
-      "Your complete voice profile in one document. Voice DNA metrics, core identity, signature elements, anti-patterns. The source of truth for your brand voice.",
+    bullets: [
+      "Voice DNA metrics & scores",
+      "Core identity markers",
+      "Signature phrases & patterns",
+      "Anti-patterns to avoid",
+    ],
     preview: "MVP Template",
   },
   {
     number: 2,
     title: "Channel Voice Profiles",
-    description:
-      "Platform-specific voice guides. How your voice adapts for Twitter's brevity, newsletter's depth, YouTube's energy. Each with specific patterns and examples.",
-    preview: "Twitter Voice Card",
+    bullets: [
+      "Platform-specific adaptations",
+      "Twitter brevity • Newsletter depth • YouTube energy",
+      "Concrete examples per channel",
+      "Do's and don'ts for each platform",
+    ],
+    preview: "Channel Cards",
   },
   {
     number: 3,
     title: "AI Prompts",
-    description:
-      "Ready-to-use prompts for ChatGPT, Claude, and other AI tools. One for your master voice, one for each channel. Copy, paste, generate content that sounds like you.",
+    bullets: [
+      "Ready for ChatGPT, Claude & more",
+      "Master voice + channel-specific prompts",
+      "Copy → Paste → Generate",
+      "Sound like yourself instantly",
+    ],
     preview: "Prompt Snippet",
   },
   {
     number: 4,
     title: "Validation Checklist",
-    description:
-      "Quick-check and deep-check criteria to verify any content matches your voice. Never publish off-brand content again.",
+    bullets: [
+      "Quick-check criteria (2 min)",
+      "Deep-check criteria (full audit)",
+      "Score any content against your voice",
+      "Never publish off-brand again",
+    ],
     preview: "Checklist Preview",
   },
 ];
@@ -41,8 +57,12 @@ const deliverables = [
 const bonus = {
   title: "Prompting Persona",
   subtitle: "How you talk to AI.",
-  description:
-    "This is the meta-layer no one else offers. We analyze how YOU communicate with AI tools: your prompting patterns, iteration style, correction language, what you say when it's right vs wrong. The result: A guide for AI on how to work with YOU specifically.",
+  bullets: [
+    "Your prompting patterns analyzed",
+    "Iteration style & correction language",
+    "What you say when it's right vs wrong",
+    "A guide for AI on how to work with YOU",
+  ],
   note: "Available as add-on with any package.",
 };
 
@@ -238,7 +258,14 @@ export function Deliverables() {
                     <h3 className="font-headline text-xl font-bold text-cream mt-2 mb-3">
                       {item.title}
                     </h3>
-                    <p className="text-stone-text">{item.description}</p>
+                    <ul className="space-y-1.5">
+                      {item.bullets.map((bullet, i) => (
+                        <li key={i} className="flex items-start gap-2 text-stone-text">
+                          <span className="text-coral mt-1.5 text-xs">●</span>
+                          <span>{bullet}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 </Card>
               </motion.div>
@@ -265,9 +292,14 @@ export function Deliverables() {
                   </h3>
                   <p className="text-coral font-semibold mt-1">{bonus.subtitle}</p>
 
-                  <p className="text-stone-text mt-4 max-w-2xl">
-                    {bonus.description}
-                  </p>
+                  <ul className="space-y-1.5 mt-4">
+                    {bonus.bullets.map((bullet, i) => (
+                      <li key={i} className="flex items-start gap-2 text-stone-text">
+                        <span className="text-peach mt-1.5 text-xs">●</span>
+                        <span>{bullet}</span>
+                      </li>
+                    ))}
+                  </ul>
 
                   <p className="text-stone-text italic mt-4">{bonus.note}</p>
                 </div>

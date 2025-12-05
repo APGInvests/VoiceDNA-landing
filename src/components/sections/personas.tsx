@@ -101,33 +101,41 @@ function PersonaCard({ persona, index }: PersonaCardProps) {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1 }}
       viewport={{ once: true }}
-      className="perspective-1000"
+      className="group"
+      style={{ perspective: "1000px" }}
+      onMouseEnter={() => setIsFlipped(true)}
+      onMouseLeave={() => setIsFlipped(false)}
+      onClick={() => setIsFlipped(!isFlipped)}
     >
       <motion.div
         className="relative w-full h-[400px] cursor-pointer"
         style={{ transformStyle: "preserve-3d" }}
-        animate={{ rotateY: isFlipped ? 180 : 0 }}
-        transition={{ duration: 0.6 }}
-        onClick={() => setIsFlipped(!isFlipped)}
-        onHoverStart={() => setIsFlipped(true)}
-        onHoverEnd={() => setIsFlipped(false)}
+        animate={{
+          rotateY: isFlipped ? 180 : 0,
+          scale: isFlipped ? 1.02 : 1,
+        }}
+        transition={{
+          duration: 0.5,
+          ease: [0.23, 1, 0.32, 1],
+        }}
+        whileHover={{ y: -4 }}
       >
         {/* Front */}
         <div
-          className="absolute inset-0 bg-stone-card border border-stone-border rounded-2xl p-8 flex flex-col items-center justify-center text-center backface-hidden"
+          className="absolute inset-0 bg-stone-card border border-stone-border rounded-2xl p-8 flex flex-col items-center justify-center text-center transition-colors group-hover:border-coral/50"
           style={{ backfaceVisibility: "hidden" }}
         >
-          <div className="text-coral mb-6">{persona.icon}</div>
+          <div className="text-coral mb-6 transition-transform group-hover:scale-110">{persona.icon}</div>
           <h3 className="font-headline text-2xl font-bold text-cream mb-3">
             {persona.title}
           </h3>
           <p className="text-lg text-peach">{persona.hook}</p>
-          <p className="text-sm text-stone-text mt-4">Hover to learn more</p>
+          <p className="text-sm text-stone-text mt-4 opacity-60">Tap or hover to learn more</p>
         </div>
 
         {/* Back */}
         <div
-          className="absolute inset-0 bg-stone-card border border-coral/30 rounded-2xl p-8 flex flex-col backface-hidden"
+          className="absolute inset-0 bg-stone-card border border-coral/30 rounded-2xl p-8 flex flex-col"
           style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
         >
           <h3 className="font-headline text-xl font-bold text-cream mb-2">

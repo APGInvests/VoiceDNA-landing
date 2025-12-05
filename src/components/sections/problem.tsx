@@ -83,6 +83,10 @@ export function Problem() {
                   the word "leverage."
                 </p>
               </div>
+
+              <div className="mt-6 p-4 bg-charcoal rounded-lg border border-coral/30">
+                <p className="text-coral font-semibold text-center">Until now.</p>
+              </div>
             </div>
           </motion.div>
 
@@ -137,8 +141,10 @@ export function Problem() {
                 </ul>
               </div>
 
-              <div className="mt-8 p-4 bg-charcoal rounded-lg border border-coral/30">
-                <p className="text-coral font-semibold">Until now.</p>
+              <div className="mt-8 p-4 bg-charcoal rounded-lg border border-success/30">
+                <p className="text-success font-semibold text-center">
+                  Never publish off-brand content again.
+                </p>
               </div>
             </div>
           </motion.div>
