@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { Container } from "@/components/ui/container";
 import { Card } from "@/components/ui/card";
@@ -46,143 +46,12 @@ const bonus = {
   note: "Available as add-on with any package.",
 };
 
-function DNAStrand({ progress }: { progress: number }) {
-  // Generate helix points for SVG path
-  const generateHelixPath = (side: "left" | "right") => {
-    const points: string[] = [];
-    const amplitude = 40;
-    const frequency = 0.015;
-    const height = 1200;
-    const offset = side === "right" ? Math.PI : 0;
-
-    for (let y = 0; y <= height; y += 5) {
-      const x = Math.sin(y * frequency + offset) * amplitude + 50;
-      if (y === 0) {
-        points.push(`M ${x} ${y}`);
-      } else {
-        points.push(`L ${x} ${y}`);
-      }
-    }
-    return points.join(" ");
-  };
-
-  // Generate connector lines between strands
-  const generateConnectors = () => {
-    const connectors = [];
-    const amplitude = 40;
-    const frequency = 0.015;
-
-    for (let y = 60; y <= 1100; y += 120) {
-      const x1 = Math.sin(y * frequency) * amplitude + 50;
-      const x2 = Math.sin(y * frequency + Math.PI) * amplitude + 50;
-      connectors.push({ y, x1, x2 });
-    }
-    return connectors;
-  };
-
-  const connectors = generateConnectors();
-
-  return (
-    <svg
-      viewBox="0 0 100 1200"
-      className="absolute left-0 top-0 h-full w-24 md:w-32"
-      preserveAspectRatio="none"
-    >
-      <defs>
-        <linearGradient id="strandGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#fb7185" stopOpacity="0.3" />
-          <stop offset="50%" stopColor="#fb7185" stopOpacity="1" />
-          <stop offset="100%" stopColor="#fda4af" stopOpacity="0.3" />
-        </linearGradient>
-        <filter id="glow">
-          <feGaussianBlur stdDeviation="2" result="coloredBlur" />
-          <feMerge>
-            <feMergeNode in="coloredBlur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-      </defs>
-
-      {/* Left strand */}
-      <motion.path
-        d={generateHelixPath("left")}
-        fill="none"
-        stroke="url(#strandGradient)"
-        strokeWidth="3"
-        strokeLinecap="round"
-        filter="url(#glow)"
-        initial={{ pathLength: 0 }}
-        animate={{ pathLength: progress }}
-        transition={{ duration: 0.5 }}
-      />
-
-      {/* Right strand */}
-      <motion.path
-        d={generateHelixPath("right")}
-        fill="none"
-        stroke="url(#strandGradient)"
-        strokeWidth="3"
-        strokeLinecap="round"
-        filter="url(#glow)"
-        initial={{ pathLength: 0 }}
-        animate={{ pathLength: progress }}
-        transition={{ duration: 0.5 }}
-      />
-
-      {/* Connectors */}
-      {connectors.map((conn, i) => (
-        <motion.line
-          key={i}
-          x1={conn.x1}
-          y1={conn.y}
-          x2={conn.x2}
-          y2={conn.y}
-          stroke="#44403c"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: progress > (i / connectors.length) ? 0.5 : 0 }}
-          transition={{ delay: i * 0.1 }}
-        />
-      ))}
-
-      {/* Nodes at intersections */}
-      {connectors.map((conn, i) => (
-        <motion.g key={`nodes-${i}`}>
-          <motion.circle
-            cx={conn.x1}
-            cy={conn.y}
-            r="5"
-            fill="#fb7185"
-            filter="url(#glow)"
-            initial={{ scale: 0 }}
-            animate={{ scale: progress > (i / connectors.length) ? 1 : 0 }}
-            transition={{ delay: i * 0.1, type: "spring" }}
-          />
-          <motion.circle
-            cx={conn.x2}
-            cy={conn.y}
-            r="5"
-            fill="#fda4af"
-            filter="url(#glow)"
-            initial={{ scale: 0 }}
-            animate={{ scale: progress > (i / connectors.length) ? 1 : 0 }}
-            transition={{ delay: i * 0.1 + 0.05, type: "spring" }}
-          />
-        </motion.g>
-      ))}
-    </svg>
-  );
-}
-
 export function Deliverables() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"],
-  });
+  const isInView = useInView(containerRef, { once: true, amount: 0.2 });
 
-  const strandProgress = useTransform(scrollYProgress, [0.1, 0.7], [0, 1]);
+  // Card positions for the helix connections (percentage from top)
+  const cardPositions = [12, 30, 48, 66, 88];
 
   return (
     <section id="deliverables" className="py-24 md:py-32 bg-stone-card">
@@ -209,38 +78,151 @@ export function Deliverables() {
         </motion.div>
 
         {/* DNA strand + cards layout */}
-        <div ref={containerRef} className="relative">
-          {/* DNA Strand - left side */}
-          <motion.div
-            className="hidden md:block"
-            style={{ opacity: useTransform(scrollYProgress, [0, 0.2], [0, 1]) }}
-          >
-            <DNAStrand progress={strandProgress.get()} />
-          </motion.div>
+        <div ref={containerRef} className="relative max-w-4xl mx-auto">
+          {/* DNA Helix SVG - Left side */}
+          <div className="hidden md:block absolute left-0 top-0 bottom-0 w-32 lg:w-40">
+            <svg
+              viewBox="0 0 120 600"
+              className="w-full h-full"
+              preserveAspectRatio="xMidYMid slice"
+            >
+              <defs>
+                <linearGradient id="helixGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#fb7185" stopOpacity="0.4" />
+                  <stop offset="50%" stopColor="#fb7185" stopOpacity="1" />
+                  <stop offset="100%" stopColor="#fda4af" stopOpacity="0.4" />
+                </linearGradient>
+                <filter id="glowFilter" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                  <feMerge>
+                    <feMergeNode in="coloredBlur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+
+              {/* Left strand of the half-helix */}
+              <motion.path
+                d={`
+                  M 30 0
+                  C 30 30, 70 50, 70 75
+                  C 70 100, 30 120, 30 150
+                  C 30 180, 70 200, 70 225
+                  C 70 250, 30 270, 30 300
+                  C 30 330, 70 350, 70 375
+                  C 70 400, 30 420, 30 450
+                  C 30 480, 70 500, 70 525
+                  C 70 550, 30 570, 30 600
+                `}
+                fill="none"
+                stroke="url(#helixGradient)"
+                strokeWidth="4"
+                strokeLinecap="round"
+                filter="url(#glowFilter)"
+                initial={{ pathLength: 0 }}
+                animate={isInView ? { pathLength: 1 } : { pathLength: 0 }}
+                transition={{ duration: 2, ease: "easeOut" }}
+              />
+
+              {/* Right strand (partial - fades out) */}
+              <motion.path
+                d={`
+                  M 70 0
+                  C 70 30, 30 50, 30 75
+                  C 30 100, 70 120, 70 150
+                  C 70 180, 30 200, 30 225
+                  C 30 250, 70 270, 70 300
+                  C 70 330, 30 350, 30 375
+                  C 30 400, 70 420, 70 450
+                  C 70 480, 30 500, 30 525
+                  C 30 550, 70 570, 70 600
+                `}
+                fill="none"
+                stroke="#fda4af"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeOpacity="0.3"
+                initial={{ pathLength: 0 }}
+                animate={isInView ? { pathLength: 1 } : { pathLength: 0 }}
+                transition={{ duration: 2, ease: "easeOut", delay: 0.2 }}
+              />
+
+              {/* Connection strands that extend to cards */}
+              {cardPositions.map((pos, i) => {
+                const y = (pos / 100) * 600;
+                // Calculate x position on the helix at this y
+                const helixX = 30 + Math.sin((y / 600) * Math.PI * 4) * 20 + 20;
+
+                return (
+                  <motion.g key={i}>
+                    {/* Connection line extending right */}
+                    <motion.path
+                      d={`M ${helixX} ${y} Q ${helixX + 30} ${y}, 120 ${y}`}
+                      fill="none"
+                      stroke={i === 4 ? "#fda4af" : "#fb7185"}
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      initial={{ pathLength: 0, opacity: 0 }}
+                      animate={isInView ? { pathLength: 1, opacity: 0.8 } : { pathLength: 0, opacity: 0 }}
+                      transition={{ duration: 0.5, delay: 0.5 + i * 0.2 }}
+                    />
+
+                    {/* Node on the helix */}
+                    <motion.circle
+                      cx={helixX}
+                      cy={y}
+                      r="8"
+                      fill={i === 4 ? "#fda4af" : "#fb7185"}
+                      filter="url(#glowFilter)"
+                      initial={{ scale: 0 }}
+                      animate={isInView ? { scale: 1 } : { scale: 0 }}
+                      transition={{ delay: 0.3 + i * 0.2, type: "spring", stiffness: 200 }}
+                    />
+
+                    {/* Inner glow of node */}
+                    <motion.circle
+                      cx={helixX}
+                      cy={y}
+                      r="4"
+                      fill="#fef3c7"
+                      initial={{ scale: 0 }}
+                      animate={isInView ? { scale: 1 } : { scale: 0 }}
+                      transition={{ delay: 0.4 + i * 0.2, type: "spring", stiffness: 200 }}
+                    />
+                  </motion.g>
+                );
+              })}
+
+              {/* Additional decorative nodes along the helix */}
+              {[25, 45, 55, 75, 95].map((pos, i) => {
+                const y = (pos / 100) * 600;
+                const helixX = 30 + Math.sin((y / 600) * Math.PI * 4) * 20 + 20;
+                return (
+                  <motion.circle
+                    key={`deco-${i}`}
+                    cx={70 - (helixX - 30)}
+                    cy={y}
+                    r="4"
+                    fill="#44403c"
+                    initial={{ scale: 0 }}
+                    animate={isInView ? { scale: 1 } : { scale: 0 }}
+                    transition={{ delay: 1 + i * 0.1 }}
+                  />
+                );
+              })}
+            </svg>
+          </div>
 
           {/* Cards - vertical stack */}
-          <div className="md:ml-32 lg:ml-40 space-y-6">
+          <div className="md:ml-36 lg:ml-44 space-y-6">
             {deliverables.map((item, index) => (
               <motion.div
                 key={item.title}
                 initial={{ opacity: 0, x: 30 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.15, duration: 0.5 }}
+                transition={{ delay: 0.5 + index * 0.15, duration: 0.5 }}
                 viewport={{ once: true, margin: "-50px" }}
-                className="relative"
               >
-                {/* Connection line to DNA strand (visible on md+) */}
-                <div className="hidden md:block absolute left-0 top-1/2 -translate-x-full w-8 lg:w-12">
-                  <motion.div
-                    className="h-0.5 bg-gradient-to-r from-coral/50 to-coral"
-                    initial={{ scaleX: 0 }}
-                    whileInView={{ scaleX: 1 }}
-                    transition={{ delay: index * 0.15 + 0.2 }}
-                    viewport={{ once: true }}
-                    style={{ transformOrigin: "right" }}
-                  />
-                </div>
-
                 <Card className="relative overflow-hidden">
                   {/* Number badge */}
                   <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-coral/10 border border-coral/30 flex items-center justify-center">
@@ -266,22 +248,10 @@ export function Deliverables() {
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.6, duration: 0.5 }}
+              transition={{ delay: 1.1, duration: 0.5 }}
               viewport={{ once: true, margin: "-50px" }}
-              className="relative mt-8"
+              className="mt-8"
             >
-              {/* Connection line */}
-              <div className="hidden md:block absolute left-0 top-1/2 -translate-x-full w-8 lg:w-12">
-                <motion.div
-                  className="h-0.5 bg-gradient-to-r from-peach/50 to-peach"
-                  initial={{ scaleX: 0 }}
-                  whileInView={{ scaleX: 1 }}
-                  transition={{ delay: 0.8 }}
-                  viewport={{ once: true }}
-                  style={{ transformOrigin: "right" }}
-                />
-              </div>
-
               <Card variant="glow" className="relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-coral/10 rounded-full blur-3xl" />
 
