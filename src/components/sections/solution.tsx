@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Container } from "@/components/ui/container";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { fadeInUp, staggerContainer } from "@/lib/variants";
+import Image from "next/image";
 
 // Channel icons
 const TwitterIcon = () => (
@@ -148,7 +149,7 @@ export function Solution() {
           className="relative py-12 mb-16"
         >
           <div className="flex items-center justify-center gap-8 flex-wrap">
-            {/* Central DNA icon */}
+            {/* Central DNA logo */}
             <motion.div
               initial={{ scale: 0 }}
               whileInView={{ scale: 1 }}
@@ -156,16 +157,14 @@ export function Solution() {
               transition={{ type: "spring", stiffness: 200 }}
               className="relative"
             >
-              <div className="w-20 h-20 rounded-full bg-coral/20 border-2 border-coral flex items-center justify-center">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  className="w-10 h-10 text-coral"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                >
-                  <path d="M12 2v20M12 2c-2 4-2 8 0 10s2 6 0 10M12 2c2 4 2 8 0 10s-2 6 0 10" />
-                </svg>
+              <div className="w-20 h-20 rounded-full bg-coral/20 border-2 border-coral flex items-center justify-center overflow-hidden">
+                <Image
+                  src="/logo.svg"
+                  alt="VoiceDNA"
+                  width={56}
+                  height={56}
+                  className="object-contain"
+                />
               </div>
               {/* Glow effect */}
               <div className="absolute inset-0 rounded-full bg-coral/30 blur-xl -z-10" />
