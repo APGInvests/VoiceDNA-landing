@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* VoiceDNA Color Palette - Charcoal + Coral */
+  --color-charcoal: #1c1917;
+  --color-coral: #fb7185;
+  --color-peach: #fda4af;
+  --color-cream: #fef3c7;
+  --color-stone-text: #a8a29e;
+  --color-stone-card: #292524;
+  --color-stone-border: #44403c;
+  --color-success: #86efac;
+
+  /* Fonts */
+  --font-headline: var(--font-space-grotesk), Inter, sans-serif;
+  --font-body: var(--font-inter), sans-serif;
+  --font-mono: var(--font-jetbrains), monospace;
+
+  /* Animations */
+  --animate-dna-rotate: dna-rotate 20s linear infinite;
+  --animate-float: float 3s ease-in-out infinite;
+  --animate-glow-pulse: glow-pulse 2s ease-in-out infinite;
+}
+
+@keyframes dna-rotate {
+  0% { transform: rotateY(0deg); }
+  100% { transform: rotateY(360deg); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Base styles */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-charcoal);
+  color: var(--color-cream);
+  font-family: var(--font-body);
+}
+
+/* Selection highlight */
+::selection {
+  background: var(--color-coral);
+  color: var(--color-charcoal);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-charcoal);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-stone-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-coral);
+}
