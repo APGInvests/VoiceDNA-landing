@@ -23,11 +23,11 @@ export default function Home() {
         <Hero />
         <Solution />
         <Problem />
+        <MetricsPreview />
         <Process />
         <Deliverables />
-        <MetricsPreview />
-        <Pricing />
         <BeforeAfter />
+        <Pricing />
         <Personas />
         <FinalCTA />
         <Footer />
