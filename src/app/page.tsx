@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Hero } from "@/components/sections/hero";
@@ -15,6 +16,14 @@ import { FinalCTA } from "@/components/sections/final-cta";
 import { LoadingScreen } from "@/components/ui/loading-screen";
 
 export default function Home() {
+  // Disable browser scroll restoration and scroll to top on page load
+  useEffect(() => {
+    if ("scrollRestoration" in history) {
+      history.scrollRestoration = "manual";
+    }
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <>
       <LoadingScreen />
