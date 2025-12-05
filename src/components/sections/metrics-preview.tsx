@@ -65,9 +65,9 @@ const metrics = [
 ];
 
 const summaryStats = [
-  { label: "Signature Phrases Detected", value: 14 },
-  { label: "Anti-Patterns Identified", value: 7 },
-  { label: "Channel Variance", value: 23, unit: "%" },
+  { label: "Metrics Per Channel", value: 40, unit: "+" },
+  { label: "Channels Analyzed", value: 6 },
+  { label: "Total Data Points", value: 200, unit: "+" },
 ];
 
 interface MetricCardProps {

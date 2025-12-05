@@ -20,7 +20,7 @@ const steps = [
     title: "Analyze",
     subtitle: "We Extract Your Voice DNA",
     description:
-      "Our system analyzes your content across 27 metrics including sentence length, pronoun ratios, question frequency, contraction rate, and signature phrases.",
+      "Our system analyzes your content across 40+ metrics per channel including sentence length, pronoun ratios, question frequency, contraction rate, and signature phrases.",
     detail: "This isn't vibes. This is data.",
     note: null,
   },

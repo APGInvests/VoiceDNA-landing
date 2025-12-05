@@ -56,7 +56,7 @@ export function Hero() {
             >
               Not templates. Not guesswork.{" "}
               <span className="text-coral font-semibold">
-                Your actual patterns, measured across 27 metrics.
+                Your actual patterns, measured across 200+ metrics.
               </span>
             </motion.p>
 
