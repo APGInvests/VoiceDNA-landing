@@ -11,10 +11,10 @@ interface LogoProps {
 }
 
 const sizes = {
-  sm: { width: 100, height: 28, text: "text-sm" },
-  md: { width: 140, height: 36, text: "text-lg" },
-  lg: { width: 180, height: 48, text: "text-2xl" },
-  xl: { width: 240, height: 64, text: "text-3xl" },
+  sm: { width: 120, height: 32, text: "text-sm" },
+  md: { width: 160, height: 40, text: "text-lg" },
+  lg: { width: 200, height: 52, text: "text-2xl" },
+  xl: { width: 260, height: 68, text: "text-3xl" },
 };
 
 export function Logo({ size = "md", animated = false, showText = true, className }: LogoProps) {
@@ -36,15 +36,15 @@ interface DNAHelixLogoProps {
 }
 
 export function DNAHelixLogo({
-  width = 140,
-  height = 36,
+  width = 160,
+  height = 40,
   animated = false,
   showText = true,
   className
 }: DNAHelixLogoProps) {
   return (
     <motion.svg
-      viewBox="0 0 160 44"
+      viewBox="0 0 180 48"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={cn("", className)}
@@ -52,20 +52,11 @@ export function DNAHelixLogo({
       initial={animated ? { opacity: 0 } : { opacity: 1 }}
       animate={{ opacity: 1 }}
     >
-      <defs>
-        <linearGradient id="helixLogoGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#fb7185" />
-          <stop offset="100%" stopColor="#fda4af" />
-        </linearGradient>
-      </defs>
-
-      {/* DNA Helix - Left strand */}
+      {/* DNA Helix - Left strand (simple, 2 curves) */}
       <motion.path
-        d="M8 4
-           C8 8, 24 10, 24 14
-           C24 18, 8 20, 8 22
-           C8 26, 24 28, 24 30
-           C24 34, 8 36, 8 40"
+        d="M6 4
+           C6 12, 30 12, 30 24
+           C30 36, 6 36, 6 44"
         stroke="#fb7185"
         strokeWidth="2.5"
         strokeLinecap="round"
@@ -75,13 +66,11 @@ export function DNAHelixLogo({
         transition={{ duration: 1.2, ease: "easeInOut" }}
       />
 
-      {/* DNA Helix - Right strand */}
+      {/* DNA Helix - Right strand (simple, 2 curves) */}
       <motion.path
-        d="M24 4
-           C24 8, 8 10, 8 14
-           C8 18, 24 20, 24 22
-           C24 26, 8 28, 8 30
-           C8 34, 24 36, 24 40"
+        d="M30 4
+           C30 12, 6 12, 6 24
+           C6 36, 30 36, 30 44"
         stroke="#fda4af"
         strokeWidth="2.5"
         strokeLinecap="round"
@@ -91,41 +80,26 @@ export function DNAHelixLogo({
         transition={{ duration: 1.2, ease: "easeInOut", delay: 0.1 }}
       />
 
-      {/* Horizontal connector bars */}
+      {/* Horizontal connector bars - just 3, spaced out */}
       <motion.g
         initial={animated ? { opacity: 0 } : { opacity: 1 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.4 }}
       >
-        <line x1="10" y1="7" x2="22" y2="7" stroke="#44403c" strokeWidth="1.5" strokeLinecap="round" />
-        <line x1="12" y1="14" x2="20" y2="14" stroke="#44403c" strokeWidth="1.5" strokeLinecap="round" />
-        <line x1="10" y1="22" x2="22" y2="22" stroke="#44403c" strokeWidth="1.5" strokeLinecap="round" />
-        <line x1="12" y1="30" x2="20" y2="30" stroke="#44403c" strokeWidth="1.5" strokeLinecap="round" />
-        <line x1="10" y1="37" x2="22" y2="37" stroke="#44403c" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="9" y1="8" x2="27" y2="8" stroke="#a8a29e" strokeWidth="2" strokeLinecap="round" />
+        <line x1="9" y1="40" x2="27" y2="40" stroke="#a8a29e" strokeWidth="2" strokeLinecap="round" />
       </motion.g>
 
-      {/* Soundwave icon in the center of helix */}
+      {/* Soundwave icon in the center - larger, more visible */}
       <motion.g
         initial={animated ? { scale: 0, opacity: 0 } : { scale: 1, opacity: 1 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
       >
-        {/* Sound wave bars */}
-        <rect x="13" y="19" width="1.5" height="6" rx="0.75" fill="#fb7185" />
-        <rect x="15.5" y="17" width="1.5" height="10" rx="0.75" fill="#fda4af" />
-        <rect x="18" y="19" width="1.5" height="6" rx="0.75" fill="#fb7185" />
-      </motion.g>
-
-      {/* End nodes */}
-      <motion.g
-        initial={animated ? { scale: 0 } : { scale: 1 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 0.8, type: "spring" }}
-      >
-        <circle cx="8" cy="4" r="2" fill="#fb7185" />
-        <circle cx="24" cy="4" r="2" fill="#fda4af" />
-        <circle cx="8" cy="40" r="2" fill="#fb7185" />
-        <circle cx="24" cy="40" r="2" fill="#fda4af" />
+        <rect x="12" y="20" width="2" height="8" rx="1" fill="#fb7185" />
+        <rect x="16" y="16" width="2" height="16" rx="1" fill="#fef3c7" />
+        <rect x="20" y="18" width="2" height="12" rx="1" fill="#fda4af" />
+        <rect x="24" y="20" width="2" height="8" rx="1" fill="#fb7185" />
       </motion.g>
 
       {/* Text: VoiceDNA */}
@@ -136,21 +110,21 @@ export function DNAHelixLogo({
           transition={{ delay: 0.3, duration: 0.5 }}
         >
           <text
-            x="36"
-            y="28"
+            x="44"
+            y="30"
             fontFamily="var(--font-space-grotesk), system-ui, sans-serif"
             fontWeight="700"
-            fontSize="18"
+            fontSize="20"
             fill="#fef3c7"
           >
             Voice
           </text>
           <text
-            x="86"
-            y="28"
+            x="100"
+            y="30"
             fontFamily="var(--font-space-grotesk), system-ui, sans-serif"
             fontWeight="700"
-            fontSize="18"
+            fontSize="20"
             fill="#fb7185"
           >
             DNA
