@@ -25,7 +25,7 @@ export function LoadingScreen() {
           className="fixed inset-0 z-[100] bg-charcoal flex flex-col items-center justify-center"
         >
           {/* Animated DNA Helix */}
-          <div className="relative w-32 h-48 mb-8">
+          <div className="relative w-32 h-64 mb-8">
             <DNALoadingAnimation />
           </div>
 
@@ -76,11 +76,11 @@ export function LoadingScreen() {
 }
 
 function DNALoadingAnimation() {
-  // Generate helix data
+  // Generate helix data for main section
   const nodeCount = 12;
-  const nodes = Array.from({ length: nodeCount }, (_, i) => {
+  const mainNodes = Array.from({ length: nodeCount }, (_, i) => {
     const t = i / (nodeCount - 1);
-    const y = t * 180;
+    const y = 60 + t * 180; // Offset to leave room for top extension
     const angle = t * Math.PI * 2;
     return {
       left: { x: 50 + Math.sin(angle) * 30, y },
@@ -89,13 +89,38 @@ function DNALoadingAnimation() {
     };
   });
 
+  // Generate top extension (fading out upward)
+  const topExtension = Array.from({ length: 6 }, (_, i) => {
+    const t = i / 5;
+    const y = 60 - (1 - t) * 80; // Goes from -20 to 60
+    const angle = -((1 - t) * Math.PI); // Continue the spiral upward
+    return {
+      left: { x: 50 + Math.sin(angle) * 30, y },
+      right: { x: 50 + Math.sin(angle + Math.PI) * 30, y },
+      opacity: t * 0.6, // Fades in toward main section
+    };
+  });
+
+  // Generate bottom extension (fading out downward)
+  const bottomExtension = Array.from({ length: 6 }, (_, i) => {
+    const t = i / 5;
+    const y = 240 + t * 80; // Goes from 240 to 320
+    const angle = Math.PI * 2 + t * Math.PI; // Continue the spiral downward
+    return {
+      left: { x: 50 + Math.sin(angle) * 30, y },
+      right: { x: 50 + Math.sin(angle + Math.PI) * 30, y },
+      opacity: (1 - t) * 0.6, // Fades out away from main section
+    };
+  });
+
   return (
-    <svg viewBox="0 0 100 180" className="w-full h-full">
+    <svg viewBox="0 0 100 300" className="w-full h-full" style={{ overflow: 'visible' }}>
       <defs>
         <linearGradient id="loadingGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#fb7185" />
-          <stop offset="50%" stopColor="#fda4af" />
-          <stop offset="100%" stopColor="#fb7185" />
+          <stop offset="0%" stopColor="#fb7185" stopOpacity="0.2" />
+          <stop offset="20%" stopColor="#fb7185" />
+          <stop offset="80%" stopColor="#fda4af" />
+          <stop offset="100%" stopColor="#fda4af" stopOpacity="0.2" />
         </linearGradient>
         <filter id="loadingGlow">
           <feGaussianBlur stdDeviation="3" result="coloredBlur" />
@@ -106,9 +131,34 @@ function DNALoadingAnimation() {
         </filter>
       </defs>
 
-      {/* Left strand */}
+      {/* Top extension - faded strands */}
+      <path
+        d={`M ${topExtension.map((n) => `${n.left.x},${n.left.y}`).join(" L ")}`}
+        fill="none"
+        stroke="#fb7185"
+        strokeWidth="3"
+        strokeLinecap="round"
+        opacity="0.3"
+      />
+      <path
+        d={`M ${topExtension.map((n) => `${n.right.x},${n.right.y}`).join(" L ")}`}
+        fill="none"
+        stroke="#fda4af"
+        strokeWidth="3"
+        strokeLinecap="round"
+        opacity="0.3"
+      />
+      {/* Top extension nodes */}
+      {topExtension.map((node, i) => (
+        <g key={`top-${i}`}>
+          <circle cx={node.left.x} cy={node.left.y} r="3" fill="#fb7185" opacity={node.opacity} />
+          <circle cx={node.right.x} cy={node.right.y} r="3" fill="#fda4af" opacity={node.opacity} />
+        </g>
+      ))}
+
+      {/* Main animated section - Left strand */}
       <motion.path
-        d={`M ${nodes.map((n) => `${n.left.x},${n.left.y}`).join(" L ")}`}
+        d={`M ${mainNodes.map((n) => `${n.left.x},${n.left.y}`).join(" L ")}`}
         fill="none"
         stroke="#fb7185"
         strokeWidth="3"
@@ -119,9 +169,9 @@ function DNALoadingAnimation() {
         transition={{ duration: 1.5, ease: "easeInOut" }}
       />
 
-      {/* Right strand */}
+      {/* Main animated section - Right strand */}
       <motion.path
-        d={`M ${nodes.map((n) => `${n.right.x},${n.right.y}`).join(" L ")}`}
+        d={`M ${mainNodes.map((n) => `${n.right.x},${n.right.y}`).join(" L ")}`}
         fill="none"
         stroke="#fda4af"
         strokeWidth="3"
@@ -133,7 +183,7 @@ function DNALoadingAnimation() {
       />
 
       {/* Connecting bars */}
-      {nodes
+      {mainNodes
         .filter((_, i) => i % 2 === 0)
         .map((node, i) => (
           <motion.line
@@ -151,8 +201,8 @@ function DNALoadingAnimation() {
           />
         ))}
 
-      {/* Nodes with staggered pulse */}
-      {nodes.map((node, i) => (
+      {/* Main nodes with staggered pulse */}
+      {mainNodes.map((node, i) => (
         <motion.g key={i}>
           <motion.circle
             cx={node.left.x}
@@ -191,6 +241,31 @@ function DNALoadingAnimation() {
         </motion.g>
       ))}
 
+      {/* Bottom extension - faded strands */}
+      <path
+        d={`M ${bottomExtension.map((n) => `${n.left.x},${n.left.y}`).join(" L ")}`}
+        fill="none"
+        stroke="#fb7185"
+        strokeWidth="3"
+        strokeLinecap="round"
+        opacity="0.3"
+      />
+      <path
+        d={`M ${bottomExtension.map((n) => `${n.right.x},${n.right.y}`).join(" L ")}`}
+        fill="none"
+        stroke="#fda4af"
+        strokeWidth="3"
+        strokeLinecap="round"
+        opacity="0.3"
+      />
+      {/* Bottom extension nodes */}
+      {bottomExtension.map((node, i) => (
+        <g key={`bottom-${i}`}>
+          <circle cx={node.left.x} cy={node.left.y} r="3" fill="#fb7185" opacity={node.opacity} />
+          <circle cx={node.right.x} cy={node.right.y} r="3" fill="#fda4af" opacity={node.opacity} />
+        </g>
+      ))}
+
       {/* Traveling pulse effect */}
       <motion.circle
         r="6"
@@ -199,8 +274,8 @@ function DNALoadingAnimation() {
         initial={{ opacity: 0 }}
         animate={{
           opacity: [0, 1, 0],
-          cx: nodes.map((n) => n.left.x),
-          cy: nodes.map((n) => n.left.y),
+          cx: mainNodes.map((n) => n.left.x),
+          cy: mainNodes.map((n) => n.left.y),
         }}
         transition={{
           duration: 2,

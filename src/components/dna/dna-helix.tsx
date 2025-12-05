@@ -2,37 +2,17 @@
 
 import { useRef, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Float, Html } from "@react-three/drei";
+import { Float } from "@react-three/drei";
 import * as THREE from "three";
-
-// Voice-related icons for special nodes
-const MicrophoneIcon = () => (
-  <div className="w-6 h-6 bg-coral rounded-full flex items-center justify-center shadow-lg shadow-coral/50">
-    <svg className="w-3 h-3 text-charcoal" fill="currentColor" viewBox="0 0 24 24">
-      <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
-      <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
-    </svg>
-  </div>
-);
-
-const SoundWaveIcon = () => (
-  <div className="w-6 h-6 bg-peach rounded-full flex items-center justify-center shadow-lg shadow-peach/50">
-    <svg className="w-3 h-3 text-charcoal" fill="currentColor" viewBox="0 0 24 24">
-      <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
-    </svg>
-  </div>
-);
 
 interface HelixNodeProps {
   position: [number, number, number];
   color: string;
   delay?: number;
-  specialType?: "mic" | "wave" | "normal";
 }
 
-function HelixNode({ position, color, delay = 0, specialType = "normal" }: HelixNodeProps) {
+function HelixNode({ position, color, delay = 0 }: HelixNodeProps) {
   const meshRef = useRef<THREE.Mesh>(null);
-  const ringRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
     if (meshRef.current) {
@@ -40,58 +20,7 @@ function HelixNode({ position, color, delay = 0, specialType = "normal" }: Helix
       const scale = 1 + Math.sin(state.clock.elapsedTime * 2 + delay) * 0.1;
       meshRef.current.scale.setScalar(scale);
     }
-    if (ringRef.current) {
-      // Rotate ring for sound wave effect
-      ringRef.current.rotation.x += 0.02;
-    }
   });
-
-  // Special nodes with HTML icons
-  if (specialType === "mic" || specialType === "wave") {
-    return (
-      <group position={position}>
-        <mesh ref={meshRef}>
-          <sphereGeometry args={[0.15, 16, 16]} />
-          <meshStandardMaterial
-            color={color}
-            emissive={color}
-            emissiveIntensity={0.6}
-            roughness={0.2}
-            metalness={0.8}
-          />
-        </mesh>
-        {/* Sound wave rings for wave type */}
-        {specialType === "wave" && (
-          <>
-            <mesh ref={ringRef} rotation={[Math.PI / 2, 0, 0]}>
-              <torusGeometry args={[0.25, 0.02, 8, 32]} />
-              <meshStandardMaterial
-                color={color}
-                emissive={color}
-                emissiveIntensity={0.3}
-                transparent
-                opacity={0.6}
-              />
-            </mesh>
-            <mesh rotation={[Math.PI / 2, 0, 0]}>
-              <torusGeometry args={[0.35, 0.015, 8, 32]} />
-              <meshStandardMaterial
-                color={color}
-                emissive={color}
-                emissiveIntensity={0.2}
-                transparent
-                opacity={0.4}
-              />
-            </mesh>
-          </>
-        )}
-        {/* HTML icon overlay */}
-        <Html center distanceFactor={8}>
-          {specialType === "mic" ? <MicrophoneIcon /> : <SoundWaveIcon />}
-        </Html>
-      </group>
-    );
-  }
 
   return (
     <mesh ref={meshRef} position={position}>
@@ -138,10 +67,10 @@ function Connector({ start, end }: ConnectorProps) {
 function DNAStrand() {
   const groupRef = useRef<THREE.Group>(null);
 
-  // Generate helix points with special node markers
+  // Generate helix points
   const { nodes1, nodes2, connectors } = useMemo(() => {
-    const nodes1: { pos: [number, number, number]; special: "mic" | "wave" | "normal" }[] = [];
-    const nodes2: { pos: [number, number, number]; special: "mic" | "wave" | "normal" }[] = [];
+    const nodes1: [number, number, number][] = [];
+    const nodes2: [number, number, number][] = [];
     const connectors: { start: [number, number, number]; end: [number, number, number] }[] = [];
 
     const turns = 2.5;
@@ -150,31 +79,20 @@ function DNAStrand() {
     const radius = 0.8;
     const height = 6;
 
-    // Indices for special nodes
-    const micIndices = [3, 15];
-    const waveIndices = [8, 20];
-
     for (let i = 0; i < totalPoints; i++) {
       const t = i / totalPoints;
       const angle = t * turns * Math.PI * 2;
       const y = (t - 0.5) * height;
 
-      // Determine special type
-      let special1: "mic" | "wave" | "normal" = "normal";
-      let special2: "mic" | "wave" | "normal" = "normal";
-
-      if (micIndices.includes(i)) special1 = "mic";
-      if (waveIndices.includes(i)) special2 = "wave";
-
       // First strand
       const x1 = Math.cos(angle) * radius;
       const z1 = Math.sin(angle) * radius;
-      nodes1.push({ pos: [x1, y, z1], special: special1 });
+      nodes1.push([x1, y, z1]);
 
       // Second strand (offset by PI)
       const x2 = Math.cos(angle + Math.PI) * radius;
       const z2 = Math.sin(angle + Math.PI) * radius;
-      nodes2.push({ pos: [x2, y, z2], special: special2 });
+      nodes2.push([x2, y, z2]);
 
       // Connector between strands (every 2 nodes)
       if (i % 2 === 0) {
@@ -198,24 +116,22 @@ function DNAStrand() {
   return (
     <group ref={groupRef}>
       {/* First strand - Coral */}
-      {nodes1.map((node, i) => (
+      {nodes1.map((pos, i) => (
         <HelixNode
           key={`strand1-${i}`}
-          position={node.pos}
+          position={pos}
           color="#fb7185"
           delay={i * 0.2}
-          specialType={node.special}
         />
       ))}
 
       {/* Second strand - Peach */}
-      {nodes2.map((node, i) => (
+      {nodes2.map((pos, i) => (
         <HelixNode
           key={`strand2-${i}`}
-          position={node.pos}
+          position={pos}
           color="#fda4af"
           delay={i * 0.2 + Math.PI}
-          specialType={node.special}
         />
       ))}
 
@@ -225,8 +141,8 @@ function DNAStrand() {
       ))}
 
       {/* Strand lines */}
-      <StrandLine nodes={nodes1.map((n) => n.pos)} color="#fb7185" />
-      <StrandLine nodes={nodes2.map((n) => n.pos)} color="#fda4af" />
+      <StrandLine nodes={nodes1} color="#fb7185" />
+      <StrandLine nodes={nodes2} color="#fda4af" />
     </group>
   );
 }
