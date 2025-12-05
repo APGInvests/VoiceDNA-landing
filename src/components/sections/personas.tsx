@@ -32,8 +32,8 @@ const PenIcon = () => (
 const personas = [
   { name: "Creators", icon: RocketIcon, color: "text-coral" },
   { name: "Consultants", icon: BriefcaseIcon, color: "text-peach" },
-  { name: "Agencies", icon: BuildingIcon, color: "text-cream" },
-  { name: "Ghostwriters", icon: PenIcon, color: "text-coral" },
+  { name: "Agencies", icon: BuildingIcon, color: "text-coral" },
+  { name: "Ghostwriters", icon: PenIcon, color: "text-peach" },
 ];
 
 export function Personas() {
@@ -67,11 +67,12 @@ export function Personas() {
               key={persona.name}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
+              whileHover={{ scale: 1.1, y: -4 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 + i * 0.1 }}
-              className="flex flex-col items-center gap-3"
+              className="flex flex-col items-center gap-3 cursor-pointer"
             >
-              <div className={`w-16 h-16 rounded-xl bg-stone-card border border-stone-border flex items-center justify-center ${persona.color} hover:border-coral hover:bg-charcoal transition-colors`}>
+              <div className={`w-16 h-16 rounded-xl bg-stone-card border border-stone-border flex items-center justify-center ${persona.color} hover:border-coral hover:bg-charcoal transition-all duration-200`}>
                 <persona.icon />
               </div>
               <span className="text-sm text-stone-text font-medium">{persona.name}</span>

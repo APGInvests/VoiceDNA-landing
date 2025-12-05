@@ -75,7 +75,7 @@ const solutions = [
   {
     title: "Channel Voices",
     description:
-      "How your voice adapts to each platform. Twitter punchy. Newsletter deep. YouTube energetic. Same DNA, different expression.",
+      "Same you, tuned for each platform. Threads that hit on X. Carousels that convert on Instagram. Videos that hook on YouTube. Emails they actually read.",
     icon: (
       <svg
         className="w-8 h-8"
