@@ -21,13 +21,13 @@ export default function Home() {
       <main className="min-h-screen bg-charcoal">
         <Header />
         <Hero />
-        <Problem />
         <Solution />
+        <Problem />
         <Process />
         <Deliverables />
         <MetricsPreview />
-        <BeforeAfter />
         <Pricing />
+        <BeforeAfter />
         <Personas />
         <FinalCTA />
         <Footer />
