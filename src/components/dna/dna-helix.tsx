@@ -199,10 +199,8 @@ function DNAStrand() {
 
       {/* Connectors - middle ones are soundwave bars */}
       {connectors.map((conn, i) => {
-        const totalConnectors = connectors.length;
-        const middleStart = Math.floor(totalConnectors / 2) - 2;
-        const middleEnd = Math.floor(totalConnectors / 2) + 1;
-        const isSoundwave = i >= middleStart && i <= middleEnd;
+        // Soundwave disabled - set to true to enable middle soundwave bars
+        const isSoundwave = false;
 
         return isSoundwave ? (
           <SoundwaveConnector
