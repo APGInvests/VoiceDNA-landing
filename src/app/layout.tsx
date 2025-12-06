@@ -19,19 +19,24 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MyVoiceDNA.ai | Your Voice. Quantified.",
+  title: "VoiceDNA | Your Voice. Quantified.",
   description: "Extract your unique voice DNA across every channel you use. Get AI prompts that actually sound like you. Not templates. Not guesswork. Your actual patterns, measured across 200+ metrics.",
   keywords: ["voice DNA", "AI writing", "personal branding", "content creation", "AI prompts"],
   authors: [{ name: "APG Iterations" }],
+  icons: {
+    icon: "/logo.svg",
+    apple: "/logo.svg",
+  },
   openGraph: {
-    title: "MyVoiceDNA.ai | Your Voice. Quantified.",
+    title: "VoiceDNA | Your Voice. Quantified.",
     description: "Extract your unique voice DNA across every channel. Get AI prompts that sound like you.",
     type: "website",
     locale: "en_US",
+    siteName: "VoiceDNA",
   },
   twitter: {
     card: "summary_large_image",
-    title: "MyVoiceDNA.ai | Your Voice. Quantified.",
+    title: "VoiceDNA | Your Voice. Quantified.",
     description: "Extract your unique voice DNA across every channel. Get AI prompts that sound like you.",
   },
 };
