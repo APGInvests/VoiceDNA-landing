@@ -72,10 +72,10 @@ function PricingCard({ tier, index }: PricingCardProps) {
       transition={{ delay: index * 0.1 }}
       viewport={{ once: true }}
       whileHover={{ y: -8 }}
-      className="relative"
+      className={`relative ${tier.popular ? "mt-6 md:mt-0" : ""}`}
     >
       {tier.popular && (
-        <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
+        <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20">
           <Badge variant="coral">Most Popular</Badge>
         </div>
       )}
