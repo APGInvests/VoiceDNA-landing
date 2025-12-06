@@ -240,8 +240,8 @@ export function Deliverables() {
                 key={item.title}
                 initial={{ opacity: 0, x: 30 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.5 + index * 0.15, duration: 0.5 }}
-                viewport={{ once: true, margin: "-50px" }}
+                transition={{ delay: 0.1 + index * 0.1, duration: 0.4 }}
+                viewport={{ once: true, margin: "-150px" }}
               >
                 <Card className="relative overflow-hidden">
                   {/* Number badge */}
@@ -275,8 +275,8 @@ export function Deliverables() {
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              transition={{ delay: 1.1, duration: 0.5 }}
-              viewport={{ once: true, margin: "-50px" }}
+              transition={{ delay: 0.1, duration: 0.4 }}
+              viewport={{ once: true, margin: "-150px" }}
               className="mt-8"
             >
               <Card variant="glow" className="relative overflow-hidden">

@@ -199,7 +199,7 @@ function Scene() {
       <pointLight position={[0, -3, -2]} intensity={0.3} color="#fda4af" />
 
       {/* DNA Helix */}
-      <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.3}>
+      <Float speed={1} rotationIntensity={0.1} floatIntensity={0.1}>
         <DNAStrand />
       </Float>
     </>
