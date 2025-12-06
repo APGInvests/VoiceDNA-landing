@@ -64,6 +64,68 @@ function Connector({ start, end }: ConnectorProps) {
   );
 }
 
+// Soundwave connector - vertical bars between the two strands
+interface SoundwaveConnectorProps {
+  start: [number, number, number];
+  end: [number, number, number];
+  index: number;
+}
+
+function SoundwaveConnector({ start, end, index }: SoundwaveConnectorProps) {
+  const groupRef = useRef<THREE.Group>(null);
+
+  // Soundwave bar heights pattern (like an audio waveform)
+  const barHeights = [0.15, 0.35, 0.5, 0.35, 0.15];
+
+  const bars = useMemo(() => {
+    const startVec = new THREE.Vector3(...start);
+    const endVec = new THREE.Vector3(...end);
+    const direction = endVec.clone().sub(startVec);
+    const length = direction.length();
+    const numBars = barHeights.length;
+
+    return barHeights.map((height, i) => {
+      const t = (i + 0.5) / numBars;
+      const pos = startVec.clone().add(direction.clone().multiplyScalar(t));
+      return {
+        position: [pos.x, pos.y, pos.z] as [number, number, number],
+        height: height,
+        width: length / (numBars * 2.5),
+      };
+    });
+  }, [start, end]);
+
+  // Animate the bars
+  useFrame((state) => {
+    if (groupRef.current) {
+      groupRef.current.children.forEach((child, i) => {
+        if (child instanceof THREE.Mesh) {
+          const baseHeight = barHeights[i];
+          const pulse = Math.sin(state.clock.elapsedTime * 3 + i * 0.5 + index) * 0.15;
+          child.scale.y = baseHeight + pulse;
+        }
+      });
+    }
+  });
+
+  return (
+    <group ref={groupRef}>
+      {bars.map((bar, i) => (
+        <mesh key={i} position={bar.position}>
+          <boxGeometry args={[bar.width, 1, bar.width]} />
+          <meshStandardMaterial
+            color={i === 2 ? "#fef3c7" : "#fb7185"}
+            emissive={i === 2 ? "#fef3c7" : "#fb7185"}
+            emissiveIntensity={0.5}
+            roughness={0.3}
+            metalness={0.7}
+          />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
 function DNAStrand() {
   const groupRef = useRef<THREE.Group>(null);
 
@@ -135,10 +197,24 @@ function DNAStrand() {
         />
       ))}
 
-      {/* Connectors */}
-      {connectors.map((conn, i) => (
-        <Connector key={`conn-${i}`} start={conn.start} end={conn.end} />
-      ))}
+      {/* Connectors - middle ones are soundwave bars */}
+      {connectors.map((conn, i) => {
+        const totalConnectors = connectors.length;
+        const middleStart = Math.floor(totalConnectors / 2) - 2;
+        const middleEnd = Math.floor(totalConnectors / 2) + 1;
+        const isSoundwave = i >= middleStart && i <= middleEnd;
+
+        return isSoundwave ? (
+          <SoundwaveConnector
+            key={`conn-${i}`}
+            start={conn.start}
+            end={conn.end}
+            index={i}
+          />
+        ) : (
+          <Connector key={`conn-${i}`} start={conn.start} end={conn.end} />
+        );
+      })}
 
       {/* Strand lines */}
       <StrandLine nodes={nodes1} color="#fb7185" />
