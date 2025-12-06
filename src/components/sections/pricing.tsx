@@ -82,7 +82,7 @@ function PricingCard({ tier, index }: PricingCardProps) {
 
       <Card
         variant={tier.popular ? "glow" : "default"}
-        className={`h-full flex flex-col ${tier.popular ? "scale-105" : ""}`}
+        className={`h-full flex flex-col ${tier.popular ? "md:scale-105" : ""} border-coral/30 md:border-stone-border ${tier.popular ? "border-coral md:border-coral" : ""}`}
       >
         <div className="flex-1">
           <h3 className="font-headline text-2xl font-bold text-cream">
