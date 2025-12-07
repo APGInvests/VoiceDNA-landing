@@ -2,7 +2,7 @@
 
 import { useRef, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Float } from "@react-three/drei";
+// Float removed - was causing helix to skip/jump
 import * as THREE from "three";
 
 interface HelixNodeProps {
@@ -74,35 +74,39 @@ interface SoundwaveConnectorProps {
 function SoundwaveConnector({ start, end, index }: SoundwaveConnectorProps) {
   const groupRef = useRef<THREE.Group>(null);
 
-  // Soundwave bar heights pattern (like an audio waveform)
-  const barHeights = [0.15, 0.35, 0.5, 0.35, 0.15];
+  // Audio waveform pattern - like Knight Rider / audio track visualization
+  // Classic waveform: short-medium-tall-medium-short
+  const baseHeights = [0.12, 0.22, 0.35, 0.28, 0.18, 0.30, 0.15];
 
   const bars = useMemo(() => {
     const startVec = new THREE.Vector3(...start);
     const endVec = new THREE.Vector3(...end);
     const direction = endVec.clone().sub(startVec);
     const length = direction.length();
-    const numBars = barHeights.length;
+    const numBars = baseHeights.length;
+    const barWidth = 0.025; // Thin bars like audio waveform
 
-    return barHeights.map((height, i) => {
+    return baseHeights.map((height, i) => {
       const t = (i + 0.5) / numBars;
       const pos = startVec.clone().add(direction.clone().multiplyScalar(t));
       return {
         position: [pos.x, pos.y, pos.z] as [number, number, number],
         height: height,
-        width: length / (numBars * 2.5),
+        width: barWidth,
       };
     });
   }, [start, end]);
 
-  // Animate the bars
+  // Animate like voice/audio - each bar pulses independently
   useFrame((state) => {
     if (groupRef.current) {
       groupRef.current.children.forEach((child, i) => {
         if (child instanceof THREE.Mesh) {
-          const baseHeight = barHeights[i];
-          const pulse = Math.sin(state.clock.elapsedTime * 3 + i * 0.5 + index) * 0.15;
-          child.scale.y = baseHeight + pulse;
+          const base = baseHeights[i];
+          // Each bar has its own rhythm, like audio frequencies
+          const pulse = Math.sin(state.clock.elapsedTime * 3 + i * 1.2 + index * 2) * 0.08;
+          const pulse2 = Math.sin(state.clock.elapsedTime * 5 + i * 0.7) * 0.04;
+          child.scale.y = base + pulse + pulse2;
         }
       });
     }
@@ -114,11 +118,11 @@ function SoundwaveConnector({ start, end, index }: SoundwaveConnectorProps) {
         <mesh key={i} position={bar.position}>
           <boxGeometry args={[bar.width, 1, bar.width]} />
           <meshStandardMaterial
-            color={i === 2 ? "#fef3c7" : "#fb7185"}
-            emissive={i === 2 ? "#fef3c7" : "#fb7185"}
+            color="#fda4af"
+            emissive="#fda4af"
             emissiveIntensity={0.5}
-            roughness={0.3}
-            metalness={0.7}
+            roughness={0.2}
+            metalness={0.8}
           />
         </mesh>
       ))}
@@ -168,10 +172,10 @@ function DNAStrand() {
     return { nodes1, nodes2, connectors };
   }, []);
 
-  // Slow rotation
-  useFrame((state, delta) => {
+  // Smooth rotation based on elapsed time (no frame-dependent jumps)
+  useFrame((state) => {
     if (groupRef.current) {
-      groupRef.current.rotation.y += delta * 0.15;
+      groupRef.current.rotation.y = state.clock.elapsedTime * 0.15;
     }
   });
 
@@ -199,8 +203,9 @@ function DNAStrand() {
 
       {/* Connectors - middle ones are soundwave bars */}
       {connectors.map((conn, i) => {
-        // Soundwave disabled - set to true to enable middle soundwave bars
-        const isSoundwave = false;
+        // Only show soundwave on the 2 center connectors
+        const middleIndex = Math.floor(connectors.length / 2);
+        const isSoundwave = i === middleIndex || i === middleIndex - 1;
 
         return isSoundwave ? (
           <SoundwaveConnector
@@ -272,10 +277,8 @@ function Scene() {
       <pointLight position={[0, 3, 2]} intensity={0.5} color="#fb7185" />
       <pointLight position={[0, -3, -2]} intensity={0.3} color="#fda4af" />
 
-      {/* DNA Helix */}
-      <Float speed={1} rotationIntensity={0.1} floatIntensity={0.1}>
-        <DNAStrand />
-      </Float>
+      {/* DNA Helix - no Float to prevent jumping */}
+      <DNAStrand />
     </>
   );
 }
@@ -291,6 +294,7 @@ export function DNAHelix({ className }: DNAHelixProps) {
         camera={{ position: [0, 0, 6], fov: 45 }}
         style={{ background: "transparent" }}
         gl={{ antialias: true, alpha: true }}
+        frameloop="always"
       >
         <Scene />
       </Canvas>

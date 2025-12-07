@@ -49,7 +49,7 @@ const channels = [
   { name: "LinkedIn", icon: LinkedInIcon, color: "text-blue-400" },
   { name: "Instagram", icon: InstagramIcon, color: "text-pink-400" },
   { name: "Newsletter", icon: NewsletterIcon, color: "text-coral" },
-  { name: "Blog", icon: BlogIcon, color: "text-peach" },
+  { name: "Blog/Directory", icon: BlogIcon, color: "text-peach" },
 ];
 
 const solutions = [

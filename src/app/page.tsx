@@ -13,6 +13,7 @@ import { BeforeAfter } from "@/components/sections/before-after";
 import { Pricing } from "@/components/sections/pricing";
 import { Personas } from "@/components/sections/personas";
 import { FinalCTA } from "@/components/sections/final-cta";
+import { EmailCapture } from "@/components/sections/email-capture";
 import { LoadingScreen } from "@/components/ui/loading-screen";
 
 export default function Home() {
@@ -36,6 +37,7 @@ export default function Home() {
         <Process />
         <Deliverables />
         <BeforeAfter />
+        <EmailCapture />
         <Pricing />
         <Personas />
         <FinalCTA />

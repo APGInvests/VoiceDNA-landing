@@ -97,11 +97,11 @@ function MetricCard({ metric, index, inView }: MetricCardProps) {
     >
       <Card className="h-full">
         <div className="space-y-3">
-          <div className="flex justify-between items-start">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1">
             <span className="text-stone-text text-sm font-mono">
               {metric.label}
             </span>
-            <span className="text-coral text-xs font-mono">{metric.level}</span>
+            <span className="text-coral text-xs font-mono sm:text-right shrink-0">{metric.level}</span>
           </div>
 
           <div className="flex items-baseline gap-2">

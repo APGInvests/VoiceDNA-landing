@@ -127,6 +127,10 @@ function PricingCard({ tier, index }: PricingCardProps) {
         <Button
           variant={tier.popular ? "primary" : "secondary"}
           className="w-full mt-8"
+          onClick={() => {
+            sessionStorage.setItem("selectedTier", tier.name);
+            document.getElementById("email-capture")?.scrollIntoView({ behavior: "smooth" });
+          }}
         >
           Get Started
         </Button>
@@ -191,13 +195,34 @@ export function Pricing() {
                 <span className="text-2xl font-headline font-bold text-coral">
                   ${addOn.price}
                 </span>
-                <Button variant="secondary" size="sm">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => {
+                    // Add-on only - don't set tier, just scroll to email capture
+                    document.getElementById("email-capture")?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                >
                   Add to Any Tier
                 </Button>
               </div>
             </div>
           </Card>
         </motion.div>
+
+        {/* No subscription messaging */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          viewport={{ once: true }}
+          className="mt-12 text-center text-sm text-stone-text italic flex items-center justify-center gap-2"
+        >
+          <svg className="w-4 h-4 text-coral" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+          </svg>
+          One-time investment. No monthly fees. Yours forever.
+        </motion.p>
       </Container>
     </section>
   );

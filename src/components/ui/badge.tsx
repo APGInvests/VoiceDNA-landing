@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  variant?: "default" | "coral" | "success";
+  variant?: "default" | "coral" | "success" | "outline";
 }
 
 export function Badge({
@@ -14,6 +14,7 @@ export function Badge({
     default: "bg-stone-border text-cream",
     coral: "bg-coral/20 text-coral border border-coral/30",
     success: "bg-success/20 text-success border border-success/30",
+    outline: "bg-transparent text-stone-text border border-stone-border",
   };
 
   return (

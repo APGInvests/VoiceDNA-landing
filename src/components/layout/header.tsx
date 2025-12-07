@@ -5,17 +5,20 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/ui/logo";
+import { EmailModal } from "@/components/ui/email-modal";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { label: "Process", href: "#process" },
-  { label: "Deliverables", href: "#deliverables" },
-  { label: "Pricing", href: "#pricing" },
+  { label: "Process", href: "#process", isPage: false },
+  { label: "Deliverables", href: "#deliverables", isPage: false },
+  { label: "Sample", href: "/sample", isPage: true },
+  { label: "Pricing", href: "#pricing", isPage: false },
 ];
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,9 +29,18 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollToSection = (href: string) => {
-    const id = href.replace("#", "");
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  const handleNavClick = (href: string, isPage: boolean) => {
+    if (isPage) {
+      window.location.href = href;
+    } else {
+      // If we're on a different page, go to home first
+      if (window.location.pathname !== "/") {
+        window.location.href = "/" + href;
+      } else {
+        const id = href.replace("#", "");
+        document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+      }
+    }
     setIsMobileMenuOpen(false);
   };
 
@@ -47,7 +59,7 @@ export function Header() {
       <Container size="xl">
         <nav className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <a href="#">
+          <a href="/">
             <Logo size="lg" />
           </a>
 
@@ -56,14 +68,14 @@ export function Header() {
             {navItems.map((item) => (
               <button
                 key={item.label}
-                onClick={() => scrollToSection(item.href)}
+                onClick={() => handleNavClick(item.href, item.isPage)}
                 className="text-stone-text hover:text-cream transition-colors"
               >
                 {item.label}
               </button>
             ))}
-            <Button size="sm" onClick={() => scrollToSection("#pricing")}>
-              Get Started
+            <Button size="sm" onClick={() => setIsModalOpen(true)}>
+              Get the Free Guide
             </Button>
           </div>
 
@@ -112,7 +124,7 @@ export function Header() {
                 {navItems.map((item) => (
                   <button
                     key={item.label}
-                    onClick={() => scrollToSection(item.href)}
+                    onClick={() => handleNavClick(item.href, item.isPage)}
                     className="text-left text-stone-text hover:text-cream transition-colors py-2"
                   >
                     {item.label}
@@ -121,15 +133,21 @@ export function Header() {
                 <Button
                   size="sm"
                   className="w-full mt-2"
-                  onClick={() => scrollToSection("#pricing")}
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    setIsModalOpen(true);
+                  }}
                 >
-                  Get Started
+                  Get the Free Guide
                 </Button>
               </div>
             </Container>
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Email Modal */}
+      <EmailModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </motion.header>
   );
 }
