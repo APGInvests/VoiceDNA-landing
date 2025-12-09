@@ -19,7 +19,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://voicedna-landing.vercel.app"),
+  metadataBase: new URL("https://myvoicedna.ai"),
   title: "VoiceDNA | Your Voice. Quantified.",
   description: "Extract your unique voice DNA across every channel you use. Get AI prompts that actually sound like you. Not templates. Not guesswork. Your actual patterns, measured across 200+ metrics.",
   keywords: ["voice DNA", "AI writing", "personal branding", "content creation", "AI prompts"],
@@ -27,6 +27,9 @@ export const metadata: Metadata = {
   icons: {
     icon: "/logo.svg",
     apple: "/logo.svg",
+  },
+  verification: {
+    google: "ks3r7hIRM30cA77rbFTva8O_tX0CBljfNPFOv9vOZ5w",
   },
   openGraph: {
     title: "VoiceDNA | Your Voice. Quantified.",
