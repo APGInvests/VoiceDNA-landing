@@ -1,9 +1,23 @@
 "use client";
 
-import { useRef, useMemo } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { useRef, useMemo, useState, useEffect } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 // Float removed - was causing helix to skip/jump
 import * as THREE from "three";
+
+// Animation controller - only renders when visible
+function AnimationController({ isVisible }: { isVisible: boolean }) {
+  const { invalidate } = useThree();
+
+  useFrame(() => {
+    // Only request next frame if component is visible
+    if (isVisible) {
+      invalidate();
+    }
+  });
+
+  return null;
+}
 
 interface HelixNodeProps {
   position: [number, number, number];
@@ -260,9 +274,12 @@ function StrandLine({ nodes, color }: StrandLineProps) {
   );
 }
 
-function Scene() {
+function Scene({ isVisible }: { isVisible: boolean }) {
   return (
     <>
+      {/* Animation controller - only requests frames when visible */}
+      <AnimationController isVisible={isVisible} />
+
       {/* Ambient light for base illumination */}
       <ambientLight intensity={0.2} />
 
@@ -288,15 +305,35 @@ interface DNAHelixProps {
 }
 
 export function DNAHelix({ className }: DNAHelixProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  // IntersectionObserver to detect when component is in viewport
+  // Only animate when visible - saves CPU/battery when scrolled away
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.1 } // Trigger when 10% visible
+    );
+
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className={className}>
+    <div ref={containerRef} className={className}>
       <Canvas
         camera={{ position: [0, 0, 6], fov: 45 }}
         style={{ background: "transparent" }}
         gl={{ antialias: true, alpha: true }}
-        frameloop="always"
+        frameloop="demand"
       >
-        <Scene />
+        <Scene isVisible={isVisible} />
       </Canvas>
     </div>
   );
