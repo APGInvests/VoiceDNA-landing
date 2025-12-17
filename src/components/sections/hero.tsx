@@ -1,10 +1,43 @@
 "use client";
 
 import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
-import { DNAHelix } from "@/components/dna/dna-helix";
 import { fadeInUp, staggerContainer } from "@/lib/variants";
+
+// Lazy load DNA helix - Three.js bundle (~600KB) loads after page is interactive
+// Shows animated placeholder while loading
+const DNAHelix = dynamic(
+  () => import("@/components/dna/dna-helix").then((mod) => mod.DNAHelix),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-full flex items-center justify-center">
+        <div className="relative">
+          {/* Animated DNA placeholder */}
+          <div className="w-32 h-64 relative">
+            <div className="absolute inset-0 flex flex-col justify-center items-center gap-4">
+              {[...Array(5)].map((_, i) => (
+                <div
+                  key={i}
+                  className="flex items-center gap-8"
+                  style={{
+                    animation: `pulse 1.5s ease-in-out ${i * 0.2}s infinite`,
+                  }}
+                >
+                  <div className="w-3 h-3 rounded-full bg-coral/60" />
+                  <div className="w-16 h-0.5 bg-stone-text/30" />
+                  <div className="w-3 h-3 rounded-full bg-peach/60" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    ),
+  }
+);
 
 export function Hero() {
   const scrollToSection = (id: string) => {
